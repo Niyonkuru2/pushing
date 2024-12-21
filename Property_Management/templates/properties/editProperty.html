@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-success">Edit Property</h2>
+
+    <form action="{% url 'single_property' pk=property.pk %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ property.name }}" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="address">Address</label>
+            <input type="text" name="address" id="address" class="form-control" value="{{ property.address }}" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="property_type">Property Type</label>
+            <select name="property_type" id="property_type" class="form-control">
+                {% for key, value in property.Property_types %}
+                    <option value="{{ key }}" {% if property.property_type == key %}selected{% endif %}>
+                        {{ value }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" class="form-control" required>{{ property.description }}</textarea>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="number_of_unit">Number of Units</label>
+            <input type="number" name="number_of_unit" id="number_of_unit" class="form-control" value="{{ property.number_of_unit }}" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="image_of_prop">Property Image</label>
+            <input type="file" name="image_of_prop" id="image_of_prop" class="form-control">
+            {% if property.image_of_prop %}
+                <img src="{{ property.image_of_prop.url }}" alt="Property Image" class="img-fluid mt-2 editting">
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Save Changes</button>
+        <a href="{% url 'get_property_for_tenant' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+{% endblock %}

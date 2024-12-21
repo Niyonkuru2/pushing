@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="container-fluid hero-section bg-primary text-white py-5 hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left Content -->
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold">Buy, Sell, or Rent Property<br>With Trusted Partner</h1>
+                <p class="lead mt-3">
+                    Simply browse through our extensive list of trusted properties, schedule your buy, rent, or sell Property.
+                </p>
+                <a href="#properties" class="btn btn-light btn-lg text-primary mt-3 fw-semibold">Enter To Market &rarr;</a>
+            </div>
+            <!-- Right Image -->
+            <div class="col-md-6 text-center">
+                <img src="https://res.cloudinary.com/dya7uhzid/image/upload/v1733924430/caduiexdpwkxhygd1bvc.webp" 
+                     class="img-fluid hero"  
+                     alt="Trusted Property">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5" id="properties">
+    <div class="bg-light p-4 rounded-3">
+        <div class="row g-3">
+            {% if properties %}
+            <h4 class="text-center text-success">Latest Properties</h4>
+                {% for property in properties %}
+                    <div class="col-md-4">
+                        <!-- Property Link -->
+                        <a href="/property/get/{{ property.id }}" class="text-decoration-none">
+                            <div class="overflow-hidden rounded-top">
+                                <!-- Property Image -->
+                                <img src="{{ property.images.0.image }}" 
+                                     class="img-fluid w-100 rounded-top propimage" 
+                                     alt="Property Image" 
+                                >
+                            </div>
+                        </a>
+                        <!-- Property Details -->
+                        <div class="bg-white p-4 rounded-bottom shadow-sm">
+                            <h3 class="fs-5 fw-bold text-dark mb-2">{{ property.name }}</h3>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i> 
+                                {{ property.address }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="container-fluid hero-section bg-primary text-white py-5 hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left Content -->
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold">Get Your Prperty<br>100+ Trusted Property</h1>
+                <a href="{% url 'register_user' %}" class="btn btn-light btn-lg text-primary mt-3 fw-semibold">Create Account &rarr;</a>
+            </div>
+            <!-- Right Image -->
+            <div class="col-md-6 text-center">
+                <img src="https://res.cloudinary.com/dya7uhzid/image/upload/v1733938099/d3ru4ez03e9np2iaezjd.avif" 
+                     class="img-fluid hero"  
+                     alt="Trusted Property">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

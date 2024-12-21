@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ property.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row bg-light rounded shadow p-3">
+        <!-- Main Image Section -->
+        <div class="col-md-4 d-flex flex-column align-items-center">
+            <img id="main-image" src="{{ property.images.all.0.image.url }}" alt="Property Image" class="img-fluid rounded mb-3">
+            <div class="mt-4 text-center">
+                <h5>Additional Images</h5>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    {% for image in property.images.all %}
+                    <div class="image-card">
+                        <img src="{{ image.image.url }}" alt="Property Image" class="img-thumbnail small-image" onclick="replaceMainImage(this.src)">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Details Section -->
+        <div class="col-md-8 d-flex align-items-center">
+            <div>
+                <p><strong>Name:</strong> {{ property.name }}</p>
+                <p><strong>Owner:</strong> {{ property.owner }}</p>
+                <p><strong>Email:</strong> {{ property.owner.email }}</p>
+                <p><strong>Address:</strong> {{ property.address }}</p>
+                <p><strong>Property Type:</strong> {{ property.property_type }}</p>
+                <p><strong>Status:</strong> {{ property.status }}</p>
+                <p><strong>Number Of Units:</strong> {{ property.number_of_unit }}</p>
+                <p><strong>Description:</strong> {{ property.description }}</p>
+                {% if property.units.exists %}
+                <div class="mt-4">
+                    <a href="{% url 'property_units' property.id %}" class="btn btn-primary">View Units</a>
+                </div>
+                {% endif %}
+                {% if request.user == property.owner %}
+                <div class="mt-4">
+                    <h5>This is your Property!</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'single_property' property.pk %}" class="btn btn-success">Edit Property</a> 
+                        <a href="{% url 'get_property_for_tenant' %}" class="btn btn-secondary">Back to Properties</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function replaceMainImage(src) {
+        const mainImage = document.getElementById('main-image');
+        mainImage.src = src;
+    }
+</script>
+{% endblock %}

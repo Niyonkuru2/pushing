@@ -1,0 +1,50 @@
+{% extends 'admin/AdminDashboard.html' %}
+{% block dashboard_content %}
+  
+<h4  class="text-center text-success">My Properties</h4>
+{% if properties %}
+    <div class="container mt-4">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Units</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for property in properties %}
+                <tr>
+                    <td>
+                        {% if property.images.all %}
+                            <img src="{{ property.images.all.0.image.url }}" alt="{{ property.name }}" width="100">
+                        {% else %}
+                            <img src="https://via.placeholder.com/100" alt="No Image" width="100">
+                        {% endif %}
+                    </td>
+                    <td>{{ property.name }}</td>
+                    <td>{{ property.address }}</td>
+                    <td>{{ property.get_property_type_display }}</td>
+                    <td>{{ property.description|truncatechars:30 }}</td>
+                    <td>{{ property.number_of_unit }}</td>
+                    <td>
+                        <a href="#" class="btn btn-success px-4 btn-sm">Edit</a>
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p class="container mt-4 text-warning text-center">You have no properties listed.</p>
+{% endif %}
+
+{% endblock %}

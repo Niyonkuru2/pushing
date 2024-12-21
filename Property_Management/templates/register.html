@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+        <form class="p-4 bg-white border rounded-4 shadow-sm" action="" method="POST">
+          {% csrf_token %}
+          <h5 class="text-center pt-3 mb-4 fw-bold">Register</h5>
+          {% if error_message %}
+          <div class="alert alert-danger text-center">
+            {{ error_message }}
+          </div>
+          {% endif %}
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="first_name" class="form-label">First Name</label>
+              <input type="text" name="first_name" id="first_name" placeholder="Enter your First Name" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="last_name" class="form-label">Last Name</label>
+              <input type="text" name="last_name" id="last_name" placeholder="Enter your Last Name" class="form-control" required>
+            </div>
+          </div>
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your Username" class="form-control" required>
+          </div>
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your Email" class="form-control" required>
+          </div>
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your Password" class="form-control" required>
+          </div>
+          <!-- Repeat Password -->
+          <div class="mb-3">
+            <label for="repeatPassword" class="form-label">Repeat Password</label>
+            <input type="password" id="repeatPassword" name="repeatPassword" placeholder="Repeat your Password" class="form-control" required>
+          </div>
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary w-100">Register</button>
+          <p class="text-center mt-3">
+            Already have an account? 
+            <a href="{% url 'login_user' %}" class="text-decoration-none text-primary">Login here</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

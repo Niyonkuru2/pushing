@@ -1,0 +1,36 @@
+{% extends 'properties.html' %}
+
+{% block properties %}
+<div class="bg-light p-4 rounded-3">
+    <div class="row g-3">
+{% if properties %}
+<h4  class="text-center text-success">Latest House Properties</h4>
+    {% for property in properties %}
+        {% if property.property_type == "House" %}
+            <div class="col-md-4">
+                <!-- Property Link -->
+                <a href="/property/get/{{ property.id }}" class="text-decoration-none">
+                    <div class="overflow-hidden rounded-top">
+                        <!-- Property Image -->
+                        <img src="{{ property.images.all.0.image.url }}" 
+                        class="img-fluid w-100 propimage" 
+                        alt="Property Image">
+                    </div>
+                </a>
+                <!-- Property Details -->
+                <div class="bg-white p-4 rounded-bottom shadow-sm">
+                    <h3 class="fs-5 fw-bold text-dark mb-2">{{ property.name }}</h3>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-map-marker-alt text-primary me-2"></i> 
+                        {{ property.address }}
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+    </div>
+{% else %}
+    <p class="fs-5 text-center text-success">No properties available for this category.</p>
+{% endif %}
+{% endblock %}

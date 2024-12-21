@@ -1,0 +1,84 @@
+{% extends 'dashboard.html' %}
+
+{% block dashboard_content %}
+<h4 class="text-center text-success">My Properties</h4>
+{% if properties %}
+    <div class="container mt-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Units</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for property in properties %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            {% if property.images.all %}
+                            <img src="{{ property.images.all.0.image.url }}" alt="{{ property.name }}" width="100">
+                             {% else %}
+                                <img src="https://via.placeholder.com/100" alt="No Image" class="img-fluid" width="100">
+                            {% endif %}
+                        </td>
+                        <td>{{ property.name }}</td>
+                        <td>{{ property.address }}</td>
+                        <td>{{ property.get_property_type_display }}</td>
+                        <td>{{ property.description|truncatechars:30 }}</td>
+                        <td>{{ property.number_of_unit }}</td>
+                        <td>
+                            <a href="{% url 'get_single_property' property.pk %}" class="btn btn-success px-4 btn-sm btn-block">Edit</a>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm btn-block" data-toggle="modal" data-target="#deleteModal" 
+                                    onclick="setDeleteUrl('{% url 'delete_property' property.pk %}')">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <p class="container mt-4 text-warning text-center">You have no properties listed.</p>
+{% endif %}
+
+<!-- Modal for deletion confirmation -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this property?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Yes</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AHR5rGux0fHv7QpNH2ErB2A07eQK4SR+7q2ijjItxNsCen8zL0m5C5JoS4Xkp" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+function setDeleteUrl(url) {
+    document.getElementById('confirmDeleteBtn').setAttribute('href', url);
+}
+</script>
+
+{% endblock %}

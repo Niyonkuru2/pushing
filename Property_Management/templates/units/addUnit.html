@@ -1,0 +1,42 @@
+{% extends 'dashboard.html' %}
+
+{% block dashboard_content %}
+  <h4  class="text-center text-success">Add Unit Describing Your Property</h4>
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert {{ message.tags }} mt-3" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+  <form method="POST" class="mt-4">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="property" class="form-label">Property</label>
+      <select class="form-select" id="property" name="property" required>
+        {% for property in properties %}
+          <option value="{{ property.id }}">{{ property.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="unit_number" class="form-label">Unit Number</label>
+      <input type="text" class="form-control" id="unit_number" name="unit_number" placeholder="Enter unit number" required>
+    </div>
+    <div class="mb-3">
+      <label for="bedroom" class="form-label">Number of Bedrooms</label>
+      <input type="number" class="form-control" id="bedroom" name="bedroom" placeholder="Enter number of bedrooms" required>
+    </div>
+    <div class="mb-3">
+      <label for="bathroom" class="form-label">Number of Bathrooms</label>
+      <input type="number" class="form-control" id="bathroom" name="bathrom" placeholder="Enter number of bathrooms" required>
+    </div>
+    <div class="mb-3">
+      <label for="rent" class="form-label">Rent Amount</label>
+      <input type="number" class="form-control" id="rent" name="rent" placeholder="Enter rent amount" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Unit</button>
+  </form>
+{% endblock %}

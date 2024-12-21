@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Properties{% endblock %}
+
+{% block content %}
+<div class="container mt-7"> <!-- Increased margin-top here -->
+    <div class="row">
+        <!-- Sidebar Links -->
+        <div class="col-md-3 d-md-block">
+            <div class="list-group mt-5 mb-4"> <!-- Increased top margin -->
+                <a href="{% url 'apartment' %}" class="btn btn-primary mb-2">Apartment</a>
+                <a href="{% url 'house' %}" class="btn btn-primary mb-2">House</a>
+                <a href="{% url 'commercial' %}" class="btn btn-primary mb-2">Commercial</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-md-9">
+            {% block properties %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

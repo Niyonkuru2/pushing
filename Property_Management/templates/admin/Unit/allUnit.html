@@ -1,0 +1,46 @@
+{% extends 'admin/AdminDashboard.html' %}
+{% block dashboard_content %}
+
+<h4  class="text-center text-success">All Units</h4>
+  {% if units %}
+  <div class="container mt-4">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Property</th>
+          <th>Unit Number</th>
+          <th>Bedrooms</th>
+          <th>Bathrooms</th>
+          <th>Rent</th>
+          <th>Availability</th>
+          <th>Edit</th>
+         <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for unit in units %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ unit.property.name }}</td>
+            <td>{{ unit.unit_number }}</td>
+            <td>{{ unit.bedroom }}</td>
+            <td>{{ unit.bathrom }}</td>
+            <td>${{ unit.rent }}</td>
+            <td>{{ unit.is_Available|yesno:"Available,Not Available" }}</td>
+            <td>
+                <a href="#" class="btn btn-success px-4 btn-sm">Edit</a>
+            </td>
+            <td>
+              <a href="#" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  {% else %}
+    <p class="container mt-4 text-warning text-center">No units found</p>
+  {% endif %}
+
+{% endblock %}

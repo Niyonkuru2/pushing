@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+   <div class="flex items-center justify-center h-screen">
+    <div class="d-flex align-items-center justify-content-center vh-100">
+     <!-- login form -->
+     <form id="login-form" class="p-4 bg-white border rounded-4 shadow" action="{% url 'login_user' %}" method="POST">
+          {% csrf_token %}
+          {% if error_message %}
+    <div class="error">
+      <h5>
+        {{error_message}}
+      </h5>
+    </div>
+    {% endif %}
+        <h2 class="text-center pt-3 mt-2">Login</h2>
+        <div>
+            <label for="username" class="black mb-1 font-medium">Username</label>
+          <input type="text" id="username" name="username" placeholder="Enter your UserName..."  class="form-control">
+        </div>
+        <div>
+            <label for="password" class="black mb-1 fw-medium">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your Password..."  class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
+        <p class="mt-2">Don't have an Account <a href="{% url 'register_user' %}" class="text-blue-600">Register here</a></p>
+     </form>
+    </div>
+   </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'dashboard.html' %}
+
+{% block dashboard_content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center text-success">My Iformation</h1>
+            
+            {% if error %}
+                <!-- Error Alert -->
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% else %}
+                <!-- Tenant Details Card -->
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2>Tenant Information</h2>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>FirstName:</strong> {{ tenant.user.first_name }}</p>
+                        <p><strong>SecondName:</strong> {{ tenant.user.last_name }}</p>
+                        <p><strong>Email:</strong> {{ tenant.user.email }}</p>
+                        <p><strong>Phone Number:</strong> {{ tenant.phone_number }}</p>
+                    </div>
+                    <div class="card-footer text-start">
+                        <a href="{% url 'edit_tenant' pk=tenant.pk %}" class="btn btn-success me-2">Edit Info</a>
+                        <a href="{% url 'get_info_for_user' %}" class="btn btn-secondary">Back to Info</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

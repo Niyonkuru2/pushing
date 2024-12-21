@@ -1,0 +1,40 @@
+{% extends 'dashboard.html' %}
+{% block dashboard_content %}
+  <h4 class="text-center text-success">Upload Property Images</h4>
+  
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div class="alert {{ message.tags }} mt-3" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data" class="mt-4">
+    {% csrf_token %}
+    
+    <!-- Property Dropdown -->
+    <div class="mb-3">
+      <label for="property" class="form-label">Select Property To Upload images to describe the beauty of property</label>
+      <select class="form-select" id="property" name="property" required>
+        {% for property in properties %}
+          <option value="{{ property.id }}">{{ property.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <!-- Image Upload -->
+    <div class="mb-3">
+      <label for="image" class="form-label">Upload Image</label>
+      <input type="file" class="form-control" id="image" name="image" required>
+    </div>
+    
+    <!-- Submit Button -->
+    <div class="mb-3">
+      <button type="submit" class="btn btn-primary">Upload Image</button>
+    </div>
+  </form>
+
+{% endblock %}

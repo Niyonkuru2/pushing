@@ -1,0 +1,40 @@
+{% extends 'dashboard.html' %}
+
+{% block dashboard_content %}
+  <h4 class="text-center text-success">Add Lease</h4>
+
+  {% if message %}
+    <div class="alert alert-warning mt-3 text-center" role="alert">
+      {{ message }}
+    </div>
+  {% else %}
+    <form method="POST" class="mt-4">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="unit" class="form-label">Unit</label>
+        <select class="form-select" id="unit" name="unit" required>
+          {% for unit in units %}
+            <option value="{{ unit.id }}">{{ unit.property.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="tenant" class="form-label">Tenant</label>
+        <input type="text" class="form-control" id="tenant" name="tenant" value="{{ request.user.username }}" readonly>
+      </div>
+      <div class="mb-3">
+        <label for="start_date" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="start_date" name="start_date" required>
+      </div>
+      <div class="mb-3">
+        <label for="end_date" class="form-label">End Date</label>
+        <input type="date" class="form-control" id="end_date" name="end_date" required>
+      </div>
+      <div class="mb-3">
+        <label for="rent_Ammount" class="form-label">Rent Amount</label>
+        <input type="number" class="form-control" id="rent_Ammount" name="rent_Ammount" placeholder="Enter rent amount" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Lease</button>
+    </form>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+<!-- dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{% url 'add_property' %}" class="list-group-item list-group-item-action">Add Property</a>
+                <a href="{% url 'upload_property_image' %}" class="list-group-item list-group-item-action">Upload Property Images</a>
+                <a href="{% url 'get_property_for_tenant' %}" class="list-group-item list-group-item-action">My Property</a>
+                <a href="{% url 'add_unit' %}" class="list-group-item list-group-item-action">Add Unit</a>
+                <a href="{% url 'get_unit_for_tenant' %}" class="list-group-item list-group-item-action">My Unit</a>
+                <a href="{% url 'add_lease' %}" class="list-group-item list-group-item-action">Add Lease</a>
+                <a href="{% url 'get_leases_for_tenant' %}" class="list-group-item list-group-item-action">My Leases</a>
+                <a href="{% url 'add_tenant' %}" class="list-group-item list-group-item-action">Add Phone Number</a>
+                <a href="{% url 'get_info_for_user' %}" class="list-group-item list-group-item-action">My Info</a>
+                <a href="{% url 'get_info_for_user' %}" class="list-group-item list-group-item-action">My Client</a>
+                <a href="{% url 'get_info_for_user' %}" class="list-group-item list-group-item-action">Buy</a>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'get_allproperties' %}" class="list-group-item list-group-item-action">Admin</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% block dashboard_content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

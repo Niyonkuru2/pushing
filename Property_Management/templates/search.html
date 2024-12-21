@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="bg-light p-4 rounded-3 shadow-sm">
+        <!-- Title Section -->
+        <h5 class="text-center mb-5 display-6 fw-bold text-dark">
+            {% if request.GET.q %}
+                Search Results for "{{ request.GET.q }}"
+            {% else %}
+                Available Properties
+            {% endif %}
+        </h5>
+
+        <div class="row g-4">
+            {% if properties %}
+                {% for property in properties %}
+                    <div class="col-md-4">
+                        <!-- Property Card -->
+                        <a href="/property/get/{{ property.id }}" class="text-decoration-none">
+                            <div class="overflow-hidden rounded-top">
+                                <!-- Image Section -->
+                                {% if property.images.all %}
+                                    <img src="{{ property.images.all.0.image.url }}" 
+                                         class="img-fluid w-100 rounded-top propimage" 
+                                         alt="Property Image" 
+                                         >
+                                {% else %}
+                                    <!-- Fallback Image in case no images are available -->
+                                    <img src="/path/to/default/image.jpg" 
+                                         class="img-fluid w-100 rounded-top" 
+                                         alt="Default Image" 
+                                         class="propimage">
+                                {% endif %}
+                            </div>
+                        </a>
+                        <div class="bg-white p-3 rounded-bottom shadow-sm">
+                            <!-- Property Name -->
+                            <h3 class="fs-5 fw-bold text-dark">{{ property.name }}</h3>
+                            <!-- Address with Icon -->
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i> 
+                                {{ property.address }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- No Properties Found -->
+                <div class="col-12 text-center">
+                    <p class="fs-5 text-success">No property found.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

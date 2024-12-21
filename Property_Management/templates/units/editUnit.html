@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-success">Edit Unit for {{ unit.property.name }}</h2>
+    <form action="{% url 'single_unit' pk=unit.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="property" value="{{ unit.property.pk }}">
+        <div class="form-group">
+            <label for="unit_number">Unit Number</label>
+            <input type="number" name="unit_number" id="unit_number" class="form-control" value="{{ unit.unit_number }}" required>
+        </div>
+    
+        <div class="form-group mt-3">
+            <label for="bedroom">Bedroom</label>
+            <input type="number" name="bedroom" id="bedroom" class="form-control" value="{{ unit.bedroom }}" required>
+        </div>
+    
+        <div class="form-group mt-3">
+            <label for="bathrom">Bathroom</label>
+            <input type="number" name="bathrom" id="bathrom" class="form-control" value="{{ unit.bathrom }}" required>
+        </div>
+    
+        <div class="form-group mt-3">
+            <label for="rent">Rent</label>
+            <input type="number" step="0.01" name="rent" id="rent" class="form-control" value="{{ unit.rent }}" required>
+        </div>
+    
+        <div class="form-group mt-3 form-check">
+            <input type="checkbox" name="is_Available" id="is_Available" class="form-check-input" {% if unit.is_Available %}checked{% endif %}>
+            <label for="is_Available" class="form-check-label">Available</label>
+        </div>
+    
+        {% if errors %}
+            <div class="alert alert-danger mt-3">
+                {{ errors }}
+            </div>
+        {% endif %}
+    <button type="submit" class="btn btn-success mt-3">Save Changes</button>
+    <a href="{% url 'get_unit_for_tenant' %}" class="btn btn-secondary mt-3">Cancel</a>
+</form>
+</div>
+{% endblock %}

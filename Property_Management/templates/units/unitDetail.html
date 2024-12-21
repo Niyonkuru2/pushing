@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Unit {{ unit.unit_number }} Details</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-4">Property: {{ property.name }}</h4>
+                    <p class="card-text">
+                        <strong>Address:</strong> {{ property.address }}<br>
+                        <strong>Unit Number:</strong> {{ unit.unit_number }}<br>
+                        <strong>Bedrooms:</strong> {{ unit.bedroom }}<br>
+                        <strong>Bathrooms:</strong> {{ unit.bathrom }}<br>
+                        <strong>Rent:</strong> ${{ unit.rent }}<br>
+                        <strong>Availability:</strong> 
+                        {% if unit.is_Available %}
+                            <span class="badge bg-success">Available</span>
+                        {% else %}
+                            <span class="badge bg-danger">Not Available</span>
+                        {% endif %}
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'single_unit' pk=unit.pk %}" class="btn btn-success">Edit Unit</a>
+                        <a href="{% url 'get_unit_for_tenant' %}" class="btn btn-secondary">Back to Units</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
