@@ -1,0 +1,63 @@
+{% extends "dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Leases You Are Tracking</h2>
+
+    {% if leases %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Id</th>
+                        <th>Property Name</th>
+                        <th>Owner</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Rent Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lease in leases %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ lease.unit.property.name }}</td>
+                        <td>{{ lease.unit.property.owner.username }}</td>
+                        <td>{{ lease.start_date|date:"F d, Y" }}</td>
+                        <td>{{ lease.end_date|date:"F d, Y" }}</td>
+                        <td>${{ lease.rent_Ammount }}</td>
+                        <td>
+                            {% if lease.end_date < today %}
+                                <span class="badge bg-danger">Expired</span>
+                            {% else %}
+                                <span class="badge bg-success">Active</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Notification Link and Unread Issues Count -->
+    <div class="mt-4 text-center">
+        <a href="{% url 'owner_notifications' %}" class="btn btn-info">
+            View Reported Issues 
+            {% if unread_issues_count > 0 %}
+                <span class="badge bg-danger">{{ unread_issues_count }}</span>
+            {% endif %}
+        </a>
+        <!-- Assuming you want a 'Read' link instead of 'Mark as Read' -->
+        {% if unread_issues_count > 0 %}
+        <a href="{% url 'mark_issues_as_read' %}" class="btn btn-secondary btn-sm">Read</a>
+        {% endif %}
+    </div>
+
+    {% else %}
+    <p class="alert alert-warning">You are not tracking any leases at the moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

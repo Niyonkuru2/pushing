@@ -2,21 +2,26 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h2>Lease Details</h2>
-        </div>
-        <div class="card-body">
-            <h5 class="card-title"><strong>Tenant:</strong> {{ lease.tenant.username }}</h5>
-            <p class="card-text">
-                <strong>Unit Number:</strong> {{ lease.unit.unit_number }}<br>
-                <strong>Start Date:</strong> {{ lease.start_date|date:"F d, Y" }}<br>
-                <strong>End Date:</strong> {{ lease.end_date|date:"F d, Y" }}<br>
-                <strong>Rent Amount:</strong> ${{ lease.rent_Ammount }}<br>
-            </p>
-            <div class="card-footer text-start">
-                <a href="{% url 'lease_edit_or_delete' pk=lease.pk %}" class="btn btn-success me-2">Edit Lease</a>
-                <a href="{% url 'get_leases_for_tenant' %}" class="btn btn-secondary">Back to Leases</a>
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Lease Details</h3>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><strong>Tenant:</strong> {{ lease.tenant.username }}</h5>
+                    <p class="card-text">
+                        <strong>Unit Number:</strong> {{ lease.unit.unit_number }}<br>
+                        <strong>Buyer:</strong> {{ lease.buyer.user.username }}<br>
+                        <strong>Start Date:</strong> {{ lease.start_date|date:"F d, Y" }}<br>
+                        <strong>End Date:</strong> {{ lease.end_date|date:"F d, Y" }}<br>
+                        <strong>Rent Amount:</strong> ${{ lease.rent_Ammount }}<br>
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'lease_edit_or_delete' pk=lease.pk %}" class="btn btn-success">Edit Lease</a>
+                        <a href="{% url 'get_leases_for_tenant' %}" class="btn btn-secondary">Back to Leases</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

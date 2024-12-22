@@ -1,0 +1,46 @@
+{% extends "dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Reported Issues</h2>
+
+    {% if issues %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Lease</th>
+                <th>Buyer</th>  <!-- Added Buyer column -->
+                <th>Description</th>
+                <th>Reported At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for issue in issues %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ issue.lease }}</td>
+                <td>{{ issue.lease.buyer.user.username }}</td>
+                <td>{{ issue.description }}</td>
+                <td>{{ issue.created_at }}</td>
+                <td>
+                    {% if not issue.is_read %}
+                    <form method="POST" action="{% url 'mark_issue_as_read' issue.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Read</button>
+                    </form>
+                    {% else %}
+                    <span class="badge bg-secondary">Read</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="alert alert-warning">No issues reported yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
+s

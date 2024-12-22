@@ -35,6 +35,9 @@ path('lease/list',views.get_leases_for_tenant,name='get_leases_for_tenant'),
 path('lease/<int:pk>',views.edit_lease,name='lease_edit_or_delete'),
 path('lease/get/<int:pk>/', views.single_lease, name='single_lease'),
 path('lease/delete/<int:pk>', views.delete_lease, name='delete_lease'),
+path('lease/client',views.get_leases_for_client,name='get_leases_for_client'),
+path('lease/tracks',views.track_my_lease_on_other_side,name='track_my_lease_on_other_side'),
+
 
 # URL To interact with tenant API 
 path('tenant/create',views.add_tenant,name='add_tenant'),
@@ -46,10 +49,16 @@ path('tenant/list',views.get_info_for_user,name='get_info_for_user'),
 path('about/',views.about,name='about'),
 path('contact/',views.contact,name='contact'),
 
+#Issues notification
+path('report_issue/<int:lease_id>/', views.report_issue, name='report_issue'),
+path('owner_notifications/', views.owner_notifications, name='owner_notifications'),
+path('mark_issue_as_read/<int:issue_id>/', views.mark_issue_as_read, name='mark_issue_as_read'),
+
 # Api for Admin dashboard
 path('properties/list',views.get_allproperties,name='get_allproperties'),
 path('property/add',views.admin_add_property,name='admin_add_property'),
 path('property/imagesupload',views.admin_upload_property_image,name='admin_upload_property_image'),
+path('property/edit/<int:property_id>',views.admin_update_property,name='admin_update_property'),
 path('units/list',views.get_allunits,name='get_allunits'),
 path('leases/list',views.get_allleases,name='get_allleases'),
 ]

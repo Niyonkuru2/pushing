@@ -50,7 +50,7 @@ class Unit(models.Model):
     is_Available = models.BooleanField(default=True)
 
     def __str__(self):
-         return f'{self.property.name} - Unit {self.unit_number}'
+         return f'Unity For {self.property.name} - Unit {self.unit_number}'
 
 # Tenant model
 class Tenant (models.Model):
@@ -71,3 +71,12 @@ class Lease(models.Model):
     def __str__(self):
         buyer_name = self.buyer.user.username if self.buyer and self.buyer.user else "No buyer"
         return f'Lease for {self.tenant.username} And {buyer_name}'
+
+class Issue(models.Model):
+    lease = models.ForeignKey('Lease', on_delete=models.CASCADE, related_name='issues')
+    description = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Issue for Lease {self.lease.id} - {self.description[:20]}"

@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center text-success">Edit Lease</h2>
-    
+    <h2 class="text-center text-success mb-4">Edit Lease</h2>
+
     <form action="{% url 'lease_edit_or_delete' pk=lease.pk %}" method="POST" class="mt-4">
         {% csrf_token %}
-        
+
         <!-- Unit Field -->
-        <div class="form-group">
-            <label for="unit">Unit</label>
-            <select name="unit" id="unit" class="form-control" required>
+        <div class="form-group mb-3">
+            <label for="unit" class="form-label">Unit</label>
+            <select name="unit" id="unit" class="form-select" required>
                 {% for unit in units %}
                     <option value="{{ unit.id }}" {% if lease.unit.id == unit.id %}selected{% endif %}>
                         Unit {{ unit.unit_number }} - {{ unit.property.name }}
@@ -18,35 +18,72 @@
                 {% endfor %}
             </select>
         </div>
-        
+
+        <!-- Buyer Selection -->
+        <div class="form-group mb-3">
+            <label for="buyer" class="form-label">Buyer</label>
+            <select name="buyer" id="buyer" class="form-select" required>
+                {% for buyer in buyers %}
+                    <option value="{{ buyer.id }}" {% if lease.buyer.id == buyer.id %}selected{% endif %}>
+                        {{ buyer.user.username }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
         <!-- Start Date Field -->
-        <div class="form-group mt-3">
-            <label for="start_date">Start Date: {{ lease.start_date }} </label>
-            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ lease.start_date }}" required>
+        <div class="form-group mb-3">
+            <label for="start_date" class="form-label">Start Date</label>
+            <input 
+                type="date" 
+                name="start_date" 
+                id="start_date" 
+                class="form-control" 
+                value="{{ lease.start_date }}" 
+                required>
         </div>
-        
+
         <!-- End Date Field -->
-        <div class="form-group mt-3">
-            <label for="end_date">End Date: {{ lease.end_date }}</label>
-            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ lease.end_date }}" required>
+        <div class="form-group mb-3">
+            <label for="end_date" class="form-label">End Date</label>
+            <input 
+                type="date" 
+                name="end_date" 
+                id="end_date" 
+                class="form-control" 
+                value="{{ lease.end_date }}" 
+                required>
         </div>
-        
+
         <!-- Rent Amount Field -->
-        <div class="form-group mt-3">
-            <label for="rent_Ammount">Rent Amount</label>
-            <input type="number" name="rent_Ammount" id="rent_Ammount" class="form-control" step="0.01" value="{{ lease.rent_Ammount }}" required>
+        <div class="form-group mb-3">
+            <label for="rent_Ammount" class="form-label">Rent Amount</label>
+            <input 
+                type="number" 
+                name="rent_Ammount" 
+                id="rent_Ammount" 
+                class="form-control" 
+                step="0.01" 
+                value="{{ lease.rent_Ammount }}" 
+                required>
         </div>
 
         <!-- Error Handling -->
         {% if errors %}
             <div class="alert alert-danger mt-3">
-                {{ errors }}
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         {% endif %}
-        
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-success mt-3">Save Changes</button>
-        <a href="{% url 'get_leases_for_tenant' %}" class="btn btn-secondary mt-3">Cancel</a>
+
+        <!-- Submit and Cancel Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a href="{% url 'get_leases_for_tenant' %}" class="btn btn-secondary">Cancel</a>
+        </div>
     </form>
 </div>
 {% endblock %}

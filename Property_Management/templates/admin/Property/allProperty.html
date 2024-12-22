@@ -33,7 +33,7 @@
                     <td>{{ property.description|truncatechars:30 }}</td>
                     <td>{{ property.number_of_unit }}</td>
                     <td>
-                        <a href="#" class="btn btn-success px-4 btn-sm">Edit</a>
+                        <a href="{% url 'admin_update_property' property_id=property.id %}" class="btn btn-success px-4 btn-sm">Edit</a>
                     </td>
                     <td>
                         <a href="#" class="btn btn-danger btn-sm">Delete</a>

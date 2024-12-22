@@ -1,0 +1,126 @@
+{% extends "dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Leases You Are Tracking</h2>
+    
+    {% if leases %}
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Id</th>
+                        <th>Property Name</th>
+                        <th>Owner</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Rent Amount</th>
+                        <th>Status</th>
+                        <th>Report Issue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lease in leases %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ lease.unit.property.name }}</td>
+                        <td>{{ lease.unit.property.owner.username }}</td>
+                        <td>{{ lease.start_date|date:"F d, Y" }}</td>
+                        <td>{{ lease.end_date|date:"F d, Y" }}</td>
+                        <td>${{ lease.rent_Ammount }}</td>
+                        <td>
+                            {% if lease.end_date < today %}
+                                <span class="badge bg-danger">Expired</span>
+                            {% else %}
+                                <span class="badge bg-success">Active</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#issueModal{{ lease.id }}">
+                                Help
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modals for Reporting Issues -->
+    {% for lease in leases %}
+    <div class="modal fade" id="issueModal{{ lease.id }}" tabindex="-1" aria-labelledby="issueModalLabel{{ lease.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="issueModalLabel{{ lease.id }}">Report Issue for Unit {{ lease.unit.unit_number }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="reportIssueForm{{ lease.id }}" onsubmit="submitIssue(event, {{ lease.id }})">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="issueDescription{{ lease.id }}" class="form-label">Describe the Issue</label>
+                            <textarea class="form-control" id="issueDescription{{ lease.id }}" name="description" rows="4" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit Issue</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="alert alert-warning">You are not tracking any leases at the moment.</p>
+    {% endif %}
+</div>
+
+<script>
+async function submitIssue(event, leaseId) {
+    event.preventDefault();
+
+    const form = document.getElementById(`reportIssueForm${leaseId}`);
+    const description = form.querySelector('textarea[name="description"]').value;
+    const csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+    if (!description.trim()) {
+        alert("Description is required.");
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('description', description);
+        formData.append('csrfmiddlewaretoken', csrfToken);
+
+        const response = await fetch(`/report_issue/${leaseId}/`, {
+            method: 'POST',  // POST request to report the issue
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert(data.message);  // Notify user about the success
+            form.reset();  // Reset form fields after submission
+            const modal = document.getElementById(`issueModal${leaseId}`);
+            const bootstrapModal = bootstrap.Modal.getInstance(modal);
+            bootstrapModal.hide();  // Close modal
+
+            // Redirect to track my leases page after successful issue submission
+            window.location.href = "{% url 'track_my_lease_on_other_side' %}";  // Adjust the URL as needed
+        } else {
+            alert(data.message);  // Show the error message if issue submission fails
+        }
+    } catch (error) {
+        console.error('Error reporting issue:', error);
+        alert('An error occurred while reporting the issue. Please try again.');
+    }
+}
+
+</script>
+{% endblock %}

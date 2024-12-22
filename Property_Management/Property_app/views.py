@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from .serializers import PropertySerializer,UnitSerializer,LeaseSerializer,TenantSerializer,PropertyImageSerializer
-from .models import Property ,Unit,Lease,Tenant
+from .models import Property ,Unit,Lease,Tenant,Issue
 from django.db.models import Q
 from django.conf import settings
 import stripe
@@ -303,70 +303,133 @@ def single_lease(request, pk):
     return render(request, 'leases/leaseDetail.html', {'lease': lease})
 
 #Add lease API 
-@api_view(['POST', 'GET'])
+@api_view(['GET', 'POST'])
 def add_lease(request):
+    # Ensure the user is authenticated
     if not request.user.is_authenticated:
         messages.error(request, "Login to continue.")
         return redirect('login_user')
 
+    # Handle GET request
     if request.method == 'GET':
+        # Get units owned by the logged-in user
         units = Unit.objects.filter(property__owner=request.user)
-        
+        buyers = Tenant.objects.all()  # Fetch all tenants as potential buyers
+
+        # Check if the user has any units
         if not units.exists():
             return render(request, 'units/addUnit.html', {
                 'message': "You don't have any units to add a lease for. Add a unit to continue."
             })
 
-        return render(request, 'leases/addLease.html', {'units': units})
+        return render(request, 'leases/addLease.html', {'units': units, 'buyers': buyers})
 
+    # Handle POST request
     if request.method == 'POST':
+        # Check if the user has any units
         units = Unit.objects.filter(property__owner=request.user)
         if not units.exists():
             messages.error(request, "You don't have any units to add a lease for. Add a unit to continue.")
             return redirect('add_unit')
-        
+
+        # Create mutable copy of request data
         data = request.POST.copy()
-        data['tenant'] = request.user.id
-        
+        data['tenant'] = request.user.id  # Set logged-in user as the tenant
+
+        # Validate and save lease using the serializer
         serializer = LeaseSerializer(data=data)
         if serializer.is_valid():
             try:
+                # Validate unit ownership
                 unit_id = data.get('unit')
                 unit = Unit.objects.get(id=unit_id)
+
                 if unit.property.owner != request.user:
                     messages.error(request, "You are not the owner of this unit, so you cannot create a lease for it.")
                     return redirect('add_lease')
-                serializer.save()
+
+                # Fetch and validate buyer
+                buyer_id = data.get('buyer')
+                buyer = Tenant.objects.get(id=buyer_id)
+
+                # Save the lease with the buyer
+                serializer.save(buyer=buyer)
+                messages.success(request, "Lease created successfully.")
                 return redirect('get_leases_for_tenant')
+
             except Unit.DoesNotExist:
                 messages.error(request, "The specified unit does not exist.")
                 return redirect('add_lease')
-        
+
+            except Tenant.DoesNotExist:
+                messages.error(request, "The specified buyer does not exist.")
+                return redirect('add_lease')
+
+        else:
+            return redirect('add_lease')
+
 #API To edit or delete lease
 @api_view(['GET', 'POST',])
 def edit_lease(request, pk):
     lease = get_object_or_404(Lease, pk=pk)
     user = request.user
     if not user.is_authenticated:
-        messages.error(request, "Login to continue.")
         return redirect('login_user')
     if lease.unit.property.owner != user:
         messages.error(request, "You are not authorized to modify this lease.")
         return redirect('add_property')
+    
     user_units = Unit.objects.filter(property__owner=user)
+    buyers = Tenant.objects.all()
 
     if request.method == 'GET':
-        return render(request, 'leases/editLease.html', {'lease': lease, 'units': user_units})
+        return render(request, 'leases/editLease.html', {'lease': lease, 'units': user_units, 'buyers': buyers})
 
     if request.method == 'POST':
         data = request.POST.dict()
-        data['tenant'] = user.id 
+        data['tenant'] = user.id
         serializer = LeaseSerializer(lease, data=data)
         if serializer.is_valid():
             serializer.save()
             return redirect('single_lease', pk=lease.pk)
         messages.error(request, "Failed to update lease. Please correct the errors below.")
-        return render(request, 'leases/editLease.html', {'lease': lease, 'units': user_units, 'errors': serializer.errors})
+        return render(request, 'leases/editLease.html', {'lease': lease, 'units': user_units, 'buyers': buyers, 'errors': serializer.errors})
+# get lease for landlord
+@api_view(['GET'])
+def get_leases_for_client_or_tenant(request):
+    if not request.user.is_authenticated:
+        return redirect('login') 
+
+    tenant = request.user
+    leases = Lease.objects.filter(tenant=tenant)
+
+    if not leases.exists():
+        return render(request, 'lease/my_lease.html', {'leases': []})
+
+    return render(request, 'lease/my_lease.html', {'leases': leases})
+
+#get lease for buyer
+@api_view(['GET'])
+def get_leases_for_client(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    owned_units = Unit.objects.filter(property__owner=request.user)
+    leases = Lease.objects.filter(unit__in=owned_units)
+
+    return render(request, 'leases/my_contract.html', {'leases': leases})
+
+# track my lease on other side 
+@api_view(['GET'])
+def track_my_lease_on_other_side(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    try:
+        buyer = Tenant.objects.get(user=request.user)
+    except Tenant.DoesNotExist:
+        return render(request, 'leases/track_my_lease_on_other.html', {'leases': []})
+    leases = Lease.objects.filter(buyer=buyer)
+
+    return render(request, 'leases/track_my_lease_on_other.html', {'leases': leases})
 
 # Deleting Lease
 def delete_lease(request, pk):
@@ -379,7 +442,6 @@ def delete_lease(request, pk):
 @api_view(['GET', 'POST'])
 def add_tenant(request):
     if not request.user.is_authenticated:
-        messages.error(request, "Login To Continue.")
         return redirect('login_user')
     
     # Check if the user already has a tenant profile
@@ -453,7 +515,42 @@ def edit_tenant(request, pk):
 
         except Exception:
             return render(request, 'tenants/editTenant.html', {'tenant': tenant})
+
+#api to report issue
+def report_issue(request, lease_id):
+    if not request.user.is_authenticated:
+        return redirect('login_user')  # Redirect to login if the user is not authenticated
+    
+    if request.method == 'POST':
+        try:
+            lease = Lease.objects.get(id=lease_id, buyer__user=request.user)
+        except Lease.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Lease not found or you do not have permission to report issues on this lease.'}, status=404)
         
+        description = request.POST.get('description', '')
+        
+        if description:
+            Issue.objects.create(lease=lease, description=description)
+            return JsonResponse({'success': True, 'message': 'Issue reported successfully!'})
+        
+        return JsonResponse({'success': False, 'message': 'Description is required.'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+
+#issue notification
+def owner_notifications(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    issues = Issue.objects.filter(lease__unit__property__owner=request.user).order_by('-created_at')
+    return render(request, 'notifications/owner_notifications.html', {'issues': issues})
+
+# mark as read
+def mark_issue_as_read(request, issue_id):
+    issue = Issue.objects.get(id=issue_id, lease__unit__property__owner=request.user)
+    issue.is_read = True
+    issue.save()
+    return redirect('owner_notifications')
+
 #load Contact page
 def contact(request):
     print("About page accessed!")
@@ -569,6 +666,27 @@ def admin_upload_property_image(request):
             messages.error(request, "Failed to upload image. Please check your inputs.")
         
         return redirect('admin_upload_property_image')
+
+# Admin add image 
+def admin_update_property(request, property_id):
+    property_instance = get_object_or_404(Property, id=property_id)
+
+    if request.method == 'POST':
+        data = request.POST
+        serializer = PropertySerializer(property_instance, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return redirect('property_list')
+        else:
+            return render(request, 'admin/Property/editProp.html', {
+                'errors': serializer.errors,
+                'form_data': data,
+                'property': property_instance,
+            })
+    else:
+        return render(request, 'admin/Property/editProp.html', {
+            'property': property_instance,
+        })
 
 # payment
 def create_checkout_session(request, lease_id):
