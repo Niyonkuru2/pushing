@@ -6,17 +6,18 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 sidebar-sticky">
             <div class="list-group">
                 <a href="{% url 'admin_add_property' %}" class="list-group-item list-group-item-action">Add Property</a>
                 <a href="{% url 'admin_upload_property_image' %}" class="list-group-item list-group-item-action">Upload Property Images</a>
                 <a href="{% url 'get_allproperties' %}" class="list-group-item list-group-item-action">All Property</a>
-                <a href="{% url 'add_unit' %}" class="list-group-item list-group-item-action">Add Unit</a>
+                <a href="{% url 'admin_add_unit' %}" class="list-group-item list-group-item-action">Add Unit</a>
                 <a href="{% url 'get_allunits' %}" class="list-group-item list-group-item-action">All Unit</a>
-                <a href="{% url 'add_lease' %}" class="list-group-item list-group-item-action">Add Lease</a>
+                <a href="{% url 'admin_add_lease' %}" class="list-group-item list-group-item-action">Add Lease</a>
                 <a href="{% url 'get_allleases' %}" class="list-group-item list-group-item-action">All Leases</a>
-                <a href="{% url 'add_tenant' %}" class="list-group-item list-group-item-action">Add Tenant</a>
-                <a href="{% url 'get_info_for_user' %}" class="list-group-item list-group-item-action">All Tenant</a>
+                <a href="{% url 'admin_add_tenant' %}" class="list-group-item list-group-item-action">Add Tenant</a>
+                <a href="{% url 'get_alltenants' %}" class="list-group-item list-group-item-action">All Tenant</a>
+                <a href="{% url 'add_property' %}" class="list-group-item list-group-item-action">Come Back</a>
             </div>
         </div>
         <div class="col-md-9">

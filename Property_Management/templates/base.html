@@ -44,6 +44,11 @@
         max-width: 100px;
         cursor: pointer;
       }
+    .sidebar-sticky {
+    position: sticky;
+    top: 20px; 
+    height: calc(100vh - 20px);
+    }
     </style>
 </head>
 <body>
@@ -105,7 +110,7 @@
                         <a class="nav-link text-danger" href="{% url 'logout_user' %}">Logout</a>
                     </div>
                     {% else %}
-                    <a class="nav-link btn btn-outline-primary rounded-pill px-4" href="{% url 'login_user' %}">Login</a>
+                    <a class="nav-link btn rounded-pill px-4" href="{% url 'login_user' %}">Login</a>
                     {% endif %}
                 </div>
             </div>
@@ -135,8 +140,8 @@
                     <h5 class="fw-bold text-primary">Company</h5>
                     <ul class="list-unstyled">
                         <li><a href="/" class="text-decoration-none text-white">Home</a></li>
-                        <li><a href="{% url 'about'%}" class="text-decoration-none text-white">About Us</a></li>
-                        <li><a href="{% url 'contact'%}" class="text-decoration-none text-white">Contact Us</a></li>
+                        <li><a href="{% url 'about' %}" class="text-decoration-none text-white">About Us</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-decoration-none text-white">Contact Us</a></li>
                     </ul>
                 </div>
 

@@ -31,7 +31,8 @@
                 <p><strong>Status:</strong> {{ property.status }}</p>
                 <p><strong>Number Of Units:</strong> {{ property.number_of_unit }}</p>
                 <p><strong>Description:</strong> {{ property.description }}</p>
-                {% if property.units.exists %}
+                
+                {% if request.user != property.owner and property.units.exists %}
                 <div class="mt-4">
                     <a href="{% url 'property_units' property.id %}" class="btn btn-primary">View Units</a>
                 </div>

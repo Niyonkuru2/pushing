@@ -2,7 +2,7 @@
 
 {% block dashboard_content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Leases You Are Tracking</h2>
+    <h2 class="text-center mb-4 text-success">Leases You Are Tracking As Buyer</h2>
     
     {% if leases %}
     <div class="card">
@@ -12,7 +12,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Property Name</th>
-                        <th>Owner</th>
+                        <th>Landlord</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Rent Amount</th>
@@ -61,7 +61,7 @@
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="issueDescription{{ lease.id }}" class="form-label">Describe the Issue</label>
+                            <label for="issueDescription{{ lease.id }}" class="form-label">Describe Your Issue To Landlord</label>
                             <textarea class="form-control" id="issueDescription{{ lease.id }}" name="description" rows="4" required></textarea>
                         </div>
                     </div>

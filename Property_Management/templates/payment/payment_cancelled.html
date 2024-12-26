@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Canceled{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-light text-center">
+                    <h4>Payment Canceled</h4>
+                </div>
+                <div class="card-body text-center">
+                    <p>Your payment was canceled. Please try again if you wish to proceed with the payment.</p>
+                    <p><strong>We apologize for the inconvenience.</strong></p>
+                    <!-- Button to return to the property or other relevant page -->
+                    <a href="/property/get/{{ unit.property.id }}" class="btn btn-secondary">Return to Property</a>
+                    <br>
+                    <a href="/" class="btn btn-primary mt-3">Go to Homepage</a> <!-- Optional: Add another action -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

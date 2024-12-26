@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center text-success">Edit Your Information</h2>
-    <form action="{% url 'edit_tenant' tenant.id %}" method="POST">
+    <form action="{% url 'admin_edit_tenant' tenant.id %}" method="POST">
         {% csrf_token %}
         <div class="form-group">
             <label for="first_name">First Name</label>

@@ -1,5 +1,40 @@
 {% extends 'admin/AdminDashboard.html' %}
-{% block dashboard_content %}
-  
 
+{% block dashboard_content %}
+<div class="container mt-5">
+    <h2 class="text-center text-success">Add New Tenant</h2>
+    <form action="{% url 'admin_add_tenant' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Enter first name" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Enter last name" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" placeholder="Enter email" required>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="phone_number">Phone Number</label>
+            <input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="Enter phone number" required>
+        </div>
+
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} mt-3">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary mt-3">Add Tenant</button>
+        <a href="{% url 'get_alltenants' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
 {% endblock %}

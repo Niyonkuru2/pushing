@@ -2,7 +2,7 @@
 
 {% block dashboard_content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Leases You Are Tracking</h2>
+    <h2 class="text-center mb-4 text-success">My Tenant And Their Lease Status</h2>
 
     {% if leases %}
     <div class="card">
@@ -12,7 +12,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Property Name</th>
-                        <th>Owner</th>
+                        <th>Tenant</th>
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Rent Amount</th>
@@ -24,7 +24,7 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ lease.unit.property.name }}</td>
-                        <td>{{ lease.unit.property.owner.username }}</td>
+                        <td>{{ lease.buyer.user.username }}</td>
                         <td>{{ lease.start_date|date:"F d, Y" }}</td>
                         <td>{{ lease.end_date|date:"F d, Y" }}</td>
                         <td>${{ lease.rent_Ammount }}</td>

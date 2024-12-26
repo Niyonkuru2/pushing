@@ -1,5 +1,73 @@
 {% extends 'admin/AdminDashboard.html' %}
 {% block dashboard_content %}
-  
+<div class="container">
+  <h4 class="text-center text-primary mt-4">Edit Lease</h4>
 
+  {% if message %}
+    <div class="alert alert-warning mt-3 text-center" role="alert">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  <form method="POST" class="mt-4">
+    {% csrf_token %}
+    
+    <!-- Unit Selection -->
+    <div class="mb-3">
+      <label for="unit" class="form-label">Select Unit</label>
+      <select class="form-select" id="unit" name="unit" required>
+        {% for unit in units %}
+          <option value="{{ unit.id }}" {% if unit.id == lease.unit.id %}selected{% endif %}>
+            {{ unit.property.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Landlord Selection -->
+    <div class="mb-3">
+      <label for="tenant" class="form-label">Select Landlord</label>
+      <select class="form-select" id="tenant" name="tenant" required>
+        {% for tenant in tenants %}
+          <option value="{{ tenant.id }}" {% if tenant.id == lease.tenant.id %}selected{% endif %}>
+            {{ tenant.username }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Buyer Selection -->
+    <div class="mb-3">
+      <label for="buyer" class="form-label">Select Buyer</label>
+      <select class="form-select" id="buyer" name="buyer" required>
+        {% for buyer in buyers %}
+          <option value="{{ buyer.id }}" {% if buyer.id == lease.buyer.id %}selected{% endif %}>
+            {{ buyer.user.username }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Start Date -->
+    <div class="mb-3">
+      <label for="start_date" class="form-label">Start Date</label>
+      <input type="date" class="form-control" id="start_date" name="start_date" value="{{ lease.start_date }}" required>
+    </div>
+
+    <!-- End Date -->
+    <div class="mb-3">
+      <label for="end_date" class="form-label">End Date</label>
+      <input type="date" class="form-control" id="end_date" name="end_date" value="{{ lease.end_date }}" required>
+    </div>
+
+    <!-- Rent Amount -->
+    <div class="mb-3">
+      <label for="rent_Ammount" class="form-label">Rent Amount</label>
+      <input type="number" class="form-control" id="rent_Ammount" name="rent_Ammount" value="{{ lease.rent_Ammount }}" required>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Update Lease</button>
+  </form>
+</div>
 {% endblock %}

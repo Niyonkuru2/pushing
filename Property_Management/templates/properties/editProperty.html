@@ -1,6 +1,5 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends 'dashboard.html' %}
+{% block dashboard_content %}
 <div class="container mt-5">
     <h2 class="text-center text-success">Edit Property</h2>
 
@@ -40,10 +39,10 @@
 
         <div class="form-group mt-3">
             <label for="image_of_prop">Property Image</label>
-            <input type="file" name="image_of_prop" id="image_of_prop" class="form-control">
-            {% if property.image_of_prop %}
-                <img src="{{ property.image_of_prop.url }}" alt="Property Image" class="img-fluid mt-2 editting">
+            {% if property.images.all %}
+                <img src="{{ property.images.all.0.image.url }}" alt="Property Image" class="img-fluid mt-2 editting">
             {% endif %}
+            <input type="file" name="image_of_prop" id="image_of_prop" class="form-control">
         </div>
 
         <button type="submit" class="btn btn-success mt-3">Save Changes</button>

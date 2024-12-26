@@ -36,7 +36,7 @@
         <div class="form-group mt-3">
             <label for="property_type" class="font-weight-bold">Property Type</label>
             <select name="property_type" id="property_type" class="form-control">
-                {% for key, value in property.Property_types.items %}
+                {% for key, value in property.Property_types %}
                     <option value="{{ key }}" {% if property.property_type == key %}selected{% endif %}>
                         {{ value }}
                     </option>
@@ -71,35 +71,17 @@
 
         <!-- Property Image -->
         <div class="form-group mt-3">
-            <label for="image_of_prop" class="font-weight-bold">Property Image</label>
-            <input 
-                type="file" 
-                name="image_of_prop" 
-                id="image_of_prop" 
-                class="form-control">
-            {% if property.image_of_prop %}
-                <img 
-                    src="{{ property.image_of_prop.url }}" 
-                    alt="Property Image" 
-                    class="img-fluid mt-3 border rounded" 
-                    style="max-height: 200px;">
+            <label for="image_of_prop">Property Image</label>
+            {% if property.images.all %}
+                <img src="{{ property.images.all.0.image.url }}" alt="Property Image" class="img-fluid mt-2 editting">
             {% endif %}
+            <input type="file" name="image_of_prop" id="image_of_prop" class="form-control">
         </div>
-
-        <!-- Status -->
-        <div class="form-group mt-3">
-            <label for="status" class="font-weight-bold">Status</label>
-            <select name="status" id="status" class="form-control">
-                <option value="Available" {% if property.status == "Available" %}selected{% endif %}>Available</option>
-                <option value="Sold" {% if property.status == "Sold" %}selected{% endif %}>Sold</option>
-            </select>
-        </div>
-
         <!-- Submit Button -->
-        <div class="form-group mt-4 text-center">
-            <button type="submit" class="btn btn-success px-5">Save Changes</button>
-            <a href="{% url 'get_property_for_tenant' %}" class="btn btn-secondary px-5 ml-2">Cancel</a>
-        </div>
+       
+            <button type="submit" class="btn btn-success mt-3">Save Changes</button>
+            <a href="{% url 'get_allproperties' %}" class="btn btn-secondary mt-3">Cancel</a>
+      
     </form>
 
     <!-- Error Display -->

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Process Payment{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-light text-center">
+                    <h4>Payment for Unit: {{ unit.unit_number }}</h4>
+                </div>
+                <div class="card-body text-center">
+                    <p><strong>Property:</strong> {{ unit.property.name }}</p>
+                    <p><strong>Rent Amount:</strong> ${{ unit.rent }}</p>
+                    <p><strong>Bedrooms:</strong> {{ unit.bedroom }}</p>
+                    <p><strong>Bathrooms:</strong> {{ unit.bathrom }}</p>
+                    <p><strong>Available:</strong> 
+                        {% if unit.is_Available %}
+                            <span class="badge bg-success">Yes</span>
+                        {% else %}
+                            <span class="badge bg-danger">No</span>
+                        {% endif %}
+                    </p>
+                    <button id="pay-now" class="btn btn-primary">Pay Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    document.getElementById('pay-now').addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        fetch(`/process_payment/{{ unit.id }}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+            } else {
+                const stripe = Stripe('{{ stripe_publishable_key }}');
+                stripe.redirectToCheckout({ sessionId: data.id });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}
